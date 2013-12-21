@@ -9,26 +9,38 @@
 #include <pthread.h>
 #include <iostream>
 #include <vector>
+#include <list>
 #include <string>
+#include <chrono>
+#include <ctime>
+using namespace std;
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/glu.h>
 
-using namespace std;
+#include "toolbox.h"
+#include "user_interface.h"
+#include "render.h"
+#include "filter.h"
+#include "scene.h"
 
-
-
-///////////////////////////////////////////////// JEngine
 namespace jengine {
+
+///////////////////////////////////////////////// GLOBAL
 
 namespace GLOBAL {
 	// declared in jengine.cc
+
+	extern void* engine_instance;
 
 	extern bool debug;
 
 	extern unsigned short window_width;
 	extern unsigned short window_height;
 }
+
+///////////////////////////////////////////////// SETUP
 
 struct SETUP {
 	SETUP() {
@@ -38,6 +50,8 @@ struct SETUP {
 		window_height = 600;
 		window_title = "JEngine";
 		glut_display_mode = GLUT_RGBA;
+		glut_ignore_key_repeat = true;
+		glut_cursor = GLUT_CURSOR_LEFT_ARROW;
 	}
 	int* argc;
 	char** argv;
@@ -45,7 +59,11 @@ struct SETUP {
 	unsigned short window_height;
 	string window_title;
 	unsigned int glut_display_mode;
+	bool glut_ignore_key_repeat;
+	unsigned int glut_cursor;
 };
+
+///////////////////////////////////////////////// JEngine
 
 class JEngine {
 public:
@@ -54,9 +72,31 @@ public:
 	void stop();
 	void start();
 
+	// scene
+	void add_scene( Scene* pS, bool load = false );
+	void load_scene( Scene* pS );
+	void load_scene( string name );
+	void unload_scene();
+	void destroy_scenes();
+
+	// get
+	vector< Scene* >* scenes();
+	Scene* scene();
 private:
+	// glut callbacks
 	static void callback_reshape( int w, int h );
 	static void callback_display();
+	static void callback_keydown( unsigned char key, int x, int y );
+	static void callback_keyup( unsigned char key, int x, int y );
+	static void callback_specialdown( int k, int x, int y );
+	static void callback_specialup( int k, int x, int y );
+	static void callback_mouse( int button, int state, int x, int y );
+	static void callback_mousemove( int x, int y );
+	static void callback_quit();
+
+private:
+	vector< Scene* > m_scenes;
+	Scene* m_pScene;
 
 };
 

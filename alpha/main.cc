@@ -13,7 +13,9 @@ int main( int argc, char* argv[] ) {
 	setup.window_title = "Test Game | JEngine";
 	jengine::JEngine je( setup );
 
+	je.load_scene( new CustomScene );
 	je.start();
+
 	return 0;
 }
 
