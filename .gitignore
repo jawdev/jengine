@@ -1,5 +1,6 @@
-.o
-.obj
-.tmp
-.swp
+*.o
+*.obj
+*.tmp
+*.*.swp
+*.swp
 ignore
