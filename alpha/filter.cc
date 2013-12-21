@@ -15,6 +15,16 @@ Filter::~Filter() {}
 
 //----------------- run
 
-void Filter::update() {}
+void Filter::update() {
+	for( unsigned int i = 0; i < m_entities.size(); i++ ) {
+		Entity* pE = m_entities[i];
+		if( pE == nullptr ) continue;
+		pE->update();
+	}
+}
+
+//----------------- get
+
+vector< Entity* >* Filter::entities() { return &m_entities; }
 
 } //jengine

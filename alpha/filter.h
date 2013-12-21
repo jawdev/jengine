@@ -15,7 +15,11 @@ public:
 
 	// run
 	virtual void update();
+
+	// get
+	vector< Entity* >* entities();
 private:
+	vector< Entity* > m_entities;
 };
 
 } //jengine

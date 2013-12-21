@@ -2,7 +2,6 @@
  * Created by JAW Development
  * jawdev > jengine > jengine.h
 *******************************************************/
-
 #ifndef __JENGINE_H__
 #define __JENGINE_H__
 
@@ -19,9 +18,11 @@ using namespace std;
 #include <GL/freeglut.h>
 #include <GL/glu.h>
 
+#include "math.h"
 #include "toolbox.h"
 #include "user_interface.h"
 #include "render.h"
+#include "entity.h"
 #include "filter.h"
 #include "scene.h"
 
