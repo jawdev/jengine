@@ -7,8 +7,8 @@
 
 #include <pthread.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
-#include <list>
 #include <string>
 #include <chrono>
 #include <ctime>
@@ -22,6 +22,7 @@ using namespace std;
 #include "toolbox.h"
 #include "user_interface.h"
 #include "render.h"
+#include "shader.h"
 #include "entity.h"
 #include "filter.h"
 #include "scene.h"
@@ -39,6 +40,8 @@ namespace GLOBAL {
 
 	extern unsigned short window_width;
 	extern unsigned short window_height;
+
+	extern ShaderProgram* shader_program;
 }
 
 ///////////////////////////////////////////////// SETUP

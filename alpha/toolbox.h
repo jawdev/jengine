@@ -41,6 +41,23 @@ namespace TOOL {
 		return ( s1.compare( s2 ) == 0 );
 	}
 
+	static inline char* file_get_contents( const char* filename, bool zero_term = false ) {
+		ifstream in( filename, ios::in|ios::binary );
+		if( !in ) {
+			cerr << __FILE__ << ":" << __LINE__ << ": File could not be read (" << filename << ")." << endl;
+			exit( 1 );
+		}
+		char* contents;
+		in.seekg( 0, ios::end );
+		unsigned int len = (unsigned int)in.tellg();
+		contents = new char[len+1];
+		in.seekg( 0, ios::beg );
+		in.read( contents, len );
+		in.close();
+		if( zero_term ) contents[len] = 0;
+		return contents;
+	}
+
 } //TOOL
 
 }//jengine

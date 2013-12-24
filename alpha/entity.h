@@ -40,6 +40,7 @@ private:
 	vec m_velocity;
 	vec m_spin;
 	vec m_morph;
+	ShaderProgram* m_pShaderProgram;
 };
 
 
