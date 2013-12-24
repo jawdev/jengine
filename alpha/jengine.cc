@@ -12,7 +12,7 @@ void* GLOBAL::engine_instance = nullptr;
 bool GLOBAL::debug = false;
 unsigned short GLOBAL::window_width = 800;
 unsigned short GLOBAL::window_height = 600;
-ShaderProgram* GLOBAL::shader_program = nullptr;
+ShaderSpec GLOBAL::shader_spec;
 
 ///////////////////////////////////////////////// JEngine
 

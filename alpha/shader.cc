@@ -44,13 +44,13 @@ GLenum Shader::opengl_type() { return m_type; }
 ShaderProgram::ShaderProgram() {
 	m_shaders[SHADER_COUNT] = { nullptr };
 	m_id = glCreateProgram();
+	m_linked = false;
 }
 
 ShaderProgram::~ShaderProgram() {
 	for( unsigned int i = 0; i < SHADER_COUNT; i++ ) {
 		if( m_shaders[i] != nullptr ) delete m_shaders[i];
 	}
-	delete * m_shaders;
 }
 
 //----------------- run
@@ -69,27 +69,44 @@ void ShaderProgram::link() {
 		delete [] log;
 		exit( 1 );
 	}
+	m_linked = true;
 }
 
 void ShaderProgram::use() {
 	glUseProgram( m_id );
+	GLOBAL::shader_spec = m_shaderSpec;
 }
 
 //----------------- load
 
-void ShaderProgram::add_shader( GLenum type, string path ) {
+ShaderProgram* ShaderProgram::add_shader( GLenum type, string path ) {
 	unsigned int i = type_map( type );
 	m_shaders[i] = new Shader( path, type );
 	glAttachShader( m_id, m_shaders[i]->opengl_id() );
+	return this;
 }
 
-void ShaderProgram::add_shader( Shader* pS ) {
+ShaderProgram* ShaderProgram::add_shader( Shader* pS ) {
 	m_shaders[type_map( pS->opengl_type() )] = pS;
 	glAttachShader( m_id, pS->opengl_id() );
+	return this;
+}
+
+ShaderProgram* ShaderProgram::spec( const ShaderSpec& s ) {
+	m_shaderSpec = s;
+	return this;
+}
+
+ShaderProgram* ShaderProgram::spec( const ShaderSpecRef& s ) {
+	for( unsigned int i = 0; i < ULOC_LEN; i++ ) {
+		m_shaderSpec[i] = uloc( s.uniform_names[i] );
+	}
+	return this;
 }
 
 //----------------- get
 
+bool ShaderProgram::linked() { return m_linked; }
 GLuint ShaderProgram::opengl_id() { return m_id; }
 GLint ShaderProgram::uloc( string label ) { return glGetUniformLocation( m_id, label.c_str() ); }
 

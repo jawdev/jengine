@@ -29,7 +29,7 @@ public:
 
 	// get
 	string name();
-private:
+protected:
 	string m_name;
 	vector< Filter* > m_filters;
 };

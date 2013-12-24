@@ -41,7 +41,7 @@ namespace GLOBAL {
 	extern unsigned short window_width;
 	extern unsigned short window_height;
 
-	extern ShaderProgram* shader_program;
+	extern ShaderSpec shader_spec;
 }
 
 ///////////////////////////////////////////////// SETUP

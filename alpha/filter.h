@@ -16,15 +16,10 @@ public:
 	// run
 	virtual void update();
 
-	// set
-	Filter* shader_program( ShaderProgram* );
-
 	// get
 	vector< Entity* >* entities();
-	ShaderProgram* shader_program();
 private:
 	vector< Entity* > m_entities;
-	ShaderProgram *m_pShaderProgram;
 };
 
 } //jengine

@@ -11,8 +11,8 @@ public:
 
 	void load();
 	void unload();
-	void reshape();
 	void display();
 private:
 	jengine::Renderbuffer* m_pRenderbuffer;
+	jengine::ShaderProgram* m_pShaderProgram;
 };

@@ -8,7 +8,6 @@ namespace jengine {
 ///////////////////////////////////////////////// Entity
 
 Entity::Entity() {
-	m_pShaderProgram = nullptr;
 }
 
 Entity::~Entity() {
@@ -19,13 +18,6 @@ Entity::~Entity() {
 
 void Entity::update() {
 	spatialize( TIMER::delta );
-	if( m_pShaderProgram != nullptr ) {
-		ShaderProgram* lastShader = GLOBAL::shader_program;
-		GLOBAL::shader_program = m_pShaderProgram;
-		m_pShaderProgram->use();
-		if( lastShader != nullptr ) lastShader->use();
-		GLOBAL::shader_program = lastShader;
-	}
 }
 
 void Entity::spatialize( float dtime ) {

@@ -11,7 +11,9 @@ Scene::Scene( string name ) {
 	m_name = name;
 }
 
-Scene::~Scene() { unload(); }
+Scene::~Scene() {
+	unload();
+}
 
 //----------------- run
 

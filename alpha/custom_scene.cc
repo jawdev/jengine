@@ -7,26 +7,28 @@
 ///////////////////////////////////////////////// CustomScene
 
 CustomScene::CustomScene() : jengine::Scene( "custom" ) {
-	
+	m_pShaderProgram = nullptr;
 }
 
 void CustomScene::load() {
-	cout << "Loading custom scene" << endl;
 	m_pRenderbuffer = new jengine::Renderbuffer();
+
+	m_pShaderProgram = new jengine::ShaderProgram();
+	m_pShaderProgram->add_shader( GL_VERTEX_SHADER, "resources/shaders/default.vs" );
+	m_pShaderProgram->add_shader( GL_FRAGMENT_SHADER, "resources/shaders/default.fs" );
+	m_pShaderProgram->link();
+	m_pShaderProgram->use();
+	m_pShaderProgram->spec( *( new jengine::ShaderSpecRef ) );
+
+	cout << jengine::GLOBAL::shader_spec[jengine::ULOC_CAMERA_MAT] << endl;
 }
 
 void CustomScene::unload() {
-	cout << "Unloading custom scene" << endl;
 	delete m_pRenderbuffer;
-}
-
-void CustomScene::reshape() {
-	cout << "Reshaping custom scene" << endl;
-	m_pRenderbuffer->resize();
+	delete m_pShaderProgram;
 }
 
 void CustomScene::display() {
-	cout << "Displaying custom scene" << endl;
 	m_pRenderbuffer->use();
 	Scene::update_filters();
 	m_pRenderbuffer->blit();
