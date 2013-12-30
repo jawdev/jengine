@@ -7,7 +7,9 @@
 
 #include <pthread.h>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
+#include <cmath>
 #include <vector>
 #include <string>
 #include <chrono>
@@ -18,16 +20,21 @@ using namespace std;
 #include <GL/freeglut.h>
 #include <GL/glu.h>
 
-#include "math.h"
+#include "vmath.h"
 #include "toolbox.h"
 #include "user_interface.h"
 #include "render.h"
 #include "shader.h"
 #include "entity.h"
+#include "camera.h"
 #include "filter.h"
 #include "scene.h"
 
 namespace jengine {
+
+///////////////////////////////////////////////// macros
+
+#define SAFE_DELETE( obj ) { if( obj != nullptr ) { delete obj; obj = nullptr; } }
 
 ///////////////////////////////////////////////// GLOBAL
 
@@ -35,8 +42,6 @@ namespace GLOBAL {
 	// declared in jengine.cc
 
 	extern void* engine_instance;
-
-	extern bool debug;
 
 	extern unsigned short window_width;
 	extern unsigned short window_height;
@@ -56,6 +61,7 @@ struct SETUP {
 		glut_display_mode = GLUT_RGBA;
 		glut_ignore_key_repeat = true;
 		glut_cursor = GLUT_CURSOR_LEFT_ARROW;
+		quit_key = 0;
 	}
 	int* argc;
 	char** argv;
@@ -65,6 +71,7 @@ struct SETUP {
 	unsigned int glut_display_mode;
 	bool glut_ignore_key_repeat;
 	unsigned int glut_cursor;
+	unsigned int quit_key;
 };
 
 ///////////////////////////////////////////////// JEngine

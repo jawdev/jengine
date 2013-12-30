@@ -23,6 +23,8 @@ short INPUT::mouse_y = 0;
 short INPUT::last_mouse_x = 0;
 short INPUT::last_mouse_y = 0;
 
+unsigned int INPUT::quit_key = 0;
+
 void INPUT::move_mouse( short x, short y ) {
 	last_mouse_x = mouse_x;
 	last_mouse_y = mouse_y;

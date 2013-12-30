@@ -15,6 +15,7 @@ public:
 
 	// run
 	virtual void update();
+	virtual void render();
 
 	// get
 	vector< Entity* >* entities();

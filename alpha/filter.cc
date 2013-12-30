@@ -23,6 +23,14 @@ void Filter::update() {
 	}
 }
 
+void Filter::render() {
+	for( unsigned int i = 0; i < m_entities.size(); i++ ) {
+		Entity* pE = m_entities[i];
+		if( pE == nullptr ) continue;
+		pE->render();
+	}
+}
+
 //----------------- get
 
 vector< Entity* >* Filter::entities() { return &m_entities; }

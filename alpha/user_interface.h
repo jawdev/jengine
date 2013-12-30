@@ -32,6 +32,8 @@ struct INPUT {
 
 	static void move_mouse( short x, short y );
 	static void reset_events();
+
+	static unsigned int quit_key;
 };
 
 

@@ -15,7 +15,8 @@ public:
 
 	// run
 	virtual void update();
-	void spatialize( float dtime );
+	void spatialize();
+	virtual void render();
 
 	// set
 	Entity* position( vec v );
@@ -32,7 +33,8 @@ public:
 	vec velocity();
 	vec spin();
 	vec morph();
-
+	mat transform();
+	mat transform_world();
 private:
 	vec m_position;
 	vec m_rotation;

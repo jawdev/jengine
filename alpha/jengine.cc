@@ -9,7 +9,6 @@ namespace jengine {
 ///////////////////////////////////////////////// GLOBAL
 
 void* GLOBAL::engine_instance = nullptr;
-bool GLOBAL::debug = false;
 unsigned short GLOBAL::window_width = 800;
 unsigned short GLOBAL::window_height = 600;
 ShaderSpec GLOBAL::shader_spec;
@@ -28,6 +27,7 @@ JEngine::JEngine( const SETUP &setup ) {
 	GLOBAL::window_width = setup.window_width;
 	GLOBAL::window_height = setup.window_height;
 	glutInitWindowSize( setup.window_width, setup.window_height );
+	glutInitWindowPosition( ( glutGet( GLUT_SCREEN_WIDTH )-setup.window_width )/2.0f, ( glutGet( GLUT_SCREEN_HEIGHT )-setup.window_height )/2.0f );
 	glutCreateWindow( setup.window_title.c_str() );
 
 	glewExperimental = GL_TRUE;
@@ -49,6 +49,8 @@ JEngine::JEngine( const SETUP &setup ) {
 	glutSetCursor( setup.glut_cursor );
 	glutMouseFunc( JEngine::callback_mouse );
 	glutPassiveMotionFunc( JEngine::callback_mousemove );
+
+	INPUT::quit_key = setup.quit_key;
 
 	m_pScene = nullptr;
 }
@@ -81,9 +83,9 @@ void JEngine::load_scene( Scene* pS ) {
 		cerr << __FILE__ << ":" << __LINE__ << ": Not loading NULL scene (" << pS << ")." << endl;
 		return;
 	}
-	if( m_pScene != nullptr ) m_pScene->unload();
+	if( m_pScene != nullptr ) m_pScene->base_unload();
 	m_pScene = pS;
-	m_pScene->load();
+	m_pScene->base_load();
 }
 
 void JEngine::load_scene( string name ) {
@@ -98,7 +100,7 @@ void JEngine::load_scene( string name ) {
 
 void JEngine::unload_scene() {
 	if( m_pScene == nullptr ) return;
-	m_pScene->unload();
+	m_pScene->base_unload();
 	m_pScene = nullptr;
 }
 
@@ -126,13 +128,20 @@ void JEngine::callback_reshape( int w, int h ) {
 
 void JEngine::callback_display() {
 	TIMER::calculate_delta();
-	if( ( (JEngine*)(GLOBAL::engine_instance ) )->scene() != nullptr ) {
-		( (JEngine*)(GLOBAL::engine_instance ) )->scene()->display();
+	JEngine* pE = (JEngine*)(GLOBAL::engine_instance);
+	if( pE->scene() != nullptr ) {
+		pE->scene()->update();
+		if( pE->scene()->camera() != nullptr ) pE->scene()->camera()->update();
+		pE->scene()->render();
 	}
 	INPUT::reset_events();
 }
 
 void JEngine::callback_keydown( unsigned char key, int x, int y ) {
+	if( INPUT::quit_key > 0 && INPUT::quit_key == (unsigned int)key ) {
+		( (JEngine*)(GLOBAL::engine_instance ) )->stop();
+		exit( 0 );
+	}
 	INPUT::key[(unsigned int)key] = true;
 	INPUT::key_down = (int)key;
 }

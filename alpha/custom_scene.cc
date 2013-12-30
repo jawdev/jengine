@@ -11,7 +11,7 @@ CustomScene::CustomScene() : jengine::Scene( "custom" ) {
 }
 
 void CustomScene::load() {
-	m_pRenderbuffer = new jengine::Renderbuffer();
+	chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
 
 	m_pShaderProgram = new jengine::ShaderProgram();
 	m_pShaderProgram->add_shader( GL_VERTEX_SHADER, "resources/shaders/default.vs" );
@@ -20,7 +20,10 @@ void CustomScene::load() {
 	m_pShaderProgram->use();
 	m_pShaderProgram->spec( *( new jengine::ShaderSpecRef ) );
 
-	cout << jengine::GLOBAL::shader_spec[jengine::ULOC_CAMERA_MAT] << endl;
+	chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
+	float diff = float( chrono::duration_cast< chrono::duration< float > >( t2-t1 ).count() );
+	cout << "time: " << setprecision( 16 ) <<  setiosflags( ios::fixed|ios::showpoint ) << diff << endl;
+
 }
 
 void CustomScene::unload() {
@@ -28,8 +31,3 @@ void CustomScene::unload() {
 	delete m_pShaderProgram;
 }
 
-void CustomScene::display() {
-	m_pRenderbuffer->use();
-	Scene::update_filters();
-	m_pRenderbuffer->blit();
-}

@@ -17,13 +17,18 @@ Entity::~Entity() {
 //----------------- run
 
 void Entity::update() {
-	spatialize( TIMER::delta );
+	spatialize();
 }
 
-void Entity::spatialize( float dtime ) {
+void Entity::spatialize() {
+	float dtime = TIMER::delta;
 	m_position += m_velocity*dtime;
 	m_rotation += m_spin*dtime;
 	m_scale += m_morph*dtime;
+}
+
+void Entity::render() {
+
 }
 
 
@@ -45,6 +50,20 @@ vec Entity::scale() { return m_scale; }
 vec Entity::velocity() { return m_velocity; }
 vec Entity::spin() { return m_spin; }
 vec Entity::morph() { return m_morph; }
+
+mat Entity::transform() {
+	mat trans, rot;
+	vmath::mat_translation( m_position, &trans );
+	vmath::mat_rotation( m_rotation, &rot );
+	return rot*trans;
+}
+
+mat Entity::transform_world() {
+	mat trans, rot;
+	vmath::mat_translation( -m_position, &trans );
+	vmath::mat_rotation( m_rotation, &rot );
+	return trans*rot;
+}
 
 
 } //jengine

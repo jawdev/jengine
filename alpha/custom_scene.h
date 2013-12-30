@@ -11,8 +11,6 @@ public:
 
 	void load();
 	void unload();
-	void display();
 private:
-	jengine::Renderbuffer* m_pRenderbuffer;
 	jengine::ShaderProgram* m_pShaderProgram;
 };
