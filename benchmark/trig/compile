@@ -1,0 +1,2 @@
+#!/bin/bash
+g++ -o sin_sqrt -std=c++11 sin_sqrt.cc

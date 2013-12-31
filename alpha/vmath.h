@@ -75,6 +75,9 @@ struct mat {
 
 	friend ostream& operator<<( ostream& os, const mat& m );
 
+	float* float_data() { return (float*)this; }
+	GLfloat* glfloat_data() { return (GLfloat*)this; }
+
 };
 
 inline ostream& operator<<( ostream& os, const mat& m ) {
@@ -107,6 +110,8 @@ struct quat {
 	float z;
 
 	friend ostream& operator<<( ostream& os, const quat& q );
+	float* float_data() { return (float*)this; }
+	GLfloat* glfloat_data() { return (GLfloat*)this; }
 
 };
 
@@ -231,6 +236,8 @@ struct vec {
 	}
 
 	friend ostream& operator<<( ostream& os, const vec& v);
+	float* float_data() { return (float*)this; }
+	GLfloat* glfloat_data() { return (GLfloat*)this; }
 
 };
 
@@ -316,6 +323,7 @@ struct vmath {
 		mat_rotation_z( v.z, &mz );
 		*m = mx*my*mz;
 	}
+
 
 };
 

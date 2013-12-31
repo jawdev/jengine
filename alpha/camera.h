@@ -32,17 +32,24 @@ public:
 	~Camera();
 
 	// input mapping
-	void map_input( InputMap* = nullptr );
+	Camera* map_input( InputMap* = nullptr );
 	void clear_input_map();
 
 	// entity
-	void attach_entity( Entity*, vec t = vec(), vec r = vec() );
+	Camera* attach_entity( Entity*, vec t = vec(), vec r = vec() );
 	void clear_entity();
 
-	// run
-	void update();
+	// projection
+	Camera* load_projection( const mat& m );
 
+	// run
+	void on_lock();
+	void update();
+	void apply();
+
+private:
 	InputMap* m_pInputMap;
+	mat m_projection;
 	Entity* m_pEntity;
 	vec m_entityOffsetT;
 	vec m_entityOffsetR;

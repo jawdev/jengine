@@ -131,7 +131,10 @@ void JEngine::callback_display() {
 	JEngine* pE = (JEngine*)(GLOBAL::engine_instance);
 	if( pE->scene() != nullptr ) {
 		pE->scene()->update();
-		if( pE->scene()->camera() != nullptr ) pE->scene()->camera()->update();
+		if( pE->scene()->camera() != nullptr ) {
+			pE->scene()->camera()->update();
+			pE->scene()->camera()->apply();
+		}
 		pE->scene()->render();
 	}
 	INPUT::reset_events();
