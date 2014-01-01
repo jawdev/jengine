@@ -55,13 +55,13 @@ Entity* Entity::spin( vec v ) { m_spin = v; return this; }
 Entity* Entity::morph( vec v ) { m_morph = v; return this; }
 
 Entity* Entity::look_at( vec v ) {
-	float dx = m_position.x-v.x;
-	float dy = m_position.y-v.y;
-	float dz = m_position.z-v.z;
-	float yang = atan( dz/dx );
-	float hyp = dz/sin( yang );
-	m_rotation.y = atan( dz/dx );
-	m_rotation.z = atan( dy/hyp );
+	float dx = v.x-m_position.x;
+	float dy = v.y-m_position.y;
+	float dz = v.z-m_position.z;
+	float yang = atan2( dz, dx );
+	float hyp = sqrt( dx*dx+dz*dz );
+	m_rotation.y = yang;
+	m_rotation.z = ( hyp==0?0:atan( dy/hyp ) );
 	return this;
 }
 
