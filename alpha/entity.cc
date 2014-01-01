@@ -58,9 +58,10 @@ Entity* Entity::look_at( vec v ) {
 	float dx = m_position.x-v.x;
 	float dy = m_position.y-v.y;
 	float dz = m_position.z-v.z;
-	//float hyp = 
+	float yang = atan( dz/dx );
+	float hyp = dz/sin( yang );
 	m_rotation.y = atan( dz/dx );
-	
+	m_rotation.z = atan( dy/hyp );
 	return this;
 }
 
