@@ -23,7 +23,6 @@ void CustomScene::load() {
 	chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
 	float diff = float( chrono::duration_cast< chrono::duration< float > >( t2-t1 ).count() );
 	cout << "time: " << setprecision( 16 ) <<  setiosflags( ios::fixed|ios::showpoint ) << diff << endl;
-
 }
 
 void CustomScene::unload() {
