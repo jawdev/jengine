@@ -7,13 +7,13 @@
 
 int main( int argc, char* argv[] ) {
 
-	jengine::SETUP setup;
+	SETUP setup;
 	setup.argc = &argc;
 	setup.argv = argv;
 	setup.window_title = "Test Game | JEngine";
 	setup.quit_key = 27;
-	jengine::JEngine je( setup );
-
+	JEngine je( setup );
+ 
 	je.load_scene( new CustomScene );
 	je.start();
 

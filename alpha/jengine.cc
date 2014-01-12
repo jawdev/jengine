@@ -9,8 +9,10 @@ namespace jengine {
 ///////////////////////////////////////////////// GLOBAL
 
 void* GLOBAL::engine_instance = nullptr;
+timer GLOBAL::stopwatch = timer();
 unsigned short GLOBAL::window_width = 800;
 unsigned short GLOBAL::window_height = 600;
+unsigned int GLOBAL::render_distance = 1;
 ShaderSpec GLOBAL::shader_spec;
 
 ///////////////////////////////////////////////// JEngine
@@ -18,6 +20,7 @@ ShaderSpec GLOBAL::shader_spec;
 JEngine::JEngine( const SETUP &setup ) {
 	pthread_getconcurrency();
 	GLOBAL::engine_instance = this;
+	GLOBAL::render_distance = setup.render_distance;
 	
 	glutInit( setup.argc, setup.argv );
 	glutInitDisplayMode( setup.glut_display_mode );
@@ -64,6 +67,7 @@ void JEngine::stop() {
 }
 
 void JEngine::start() {
+	GLOBAL::stopwatch.calculate_delta();
 	glutMainLoop();
 }
 
@@ -83,9 +87,13 @@ void JEngine::load_scene( Scene* pS ) {
 		cerr << __FILE__ << ":" << __LINE__ << ": Not loading NULL scene (" << pS << ")." << endl;
 		return;
 	}
-	if( m_pScene != nullptr ) m_pScene->base_unload();
+	if( m_pScene != nullptr ) {
+		if( m_pScene->enabled( SCENE_BASE_UNLOAD ) ) m_pScene->base_unload();
+		m_pScene->unload();
+	}
 	m_pScene = pS;
-	m_pScene->base_load();
+	if( m_pScene->enabled( SCENE_BASE_LOAD ) ) m_pScene->base_load();
+	m_pScene->load();
 }
 
 void JEngine::load_scene( string name ) {
@@ -100,7 +108,8 @@ void JEngine::load_scene( string name ) {
 
 void JEngine::unload_scene() {
 	if( m_pScene == nullptr ) return;
-	m_pScene->base_unload();
+	if( m_pScene->enabled( SCENE_BASE_UNLOAD ) ) m_pScene->base_unload();
+	m_pScene->unload();
 	m_pScene = nullptr;
 }
 
@@ -121,23 +130,29 @@ void JEngine::callback_reshape( int w, int h ) {
 	glViewport( 0, 0, w, h );
 	GLOBAL::window_width = w;
 	GLOBAL::window_height = h;
-	if( ( (JEngine*)(GLOBAL::engine_instance ) )->scene() != nullptr ) {
-		( (JEngine*)(GLOBAL::engine_instance ) )->scene()->reshape();
+	JEngine* pE = (JEngine*)(GLOBAL::engine_instance);
+	if( pE->scene() != nullptr ) {
+		if( pE->scene()->enabled( SCENE_BASE_RESHAPE ) ) pE->scene()->base_reshape();
+		pE->scene()->reshape();
 	}
 }
 
 void JEngine::callback_display() {
-	TIMER::calculate_delta();
+	GLOBAL::stopwatch.calculate_delta();
 	JEngine* pE = (JEngine*)(GLOBAL::engine_instance);
 	if( pE->scene() != nullptr ) {
+		if( pE->scene()->enabled( SCENE_BASE_UPDATE ) ) pE->scene()->base_update();
 		pE->scene()->update();
 		if( pE->scene()->camera() != nullptr ) {
 			pE->scene()->camera()->update();
-			pE->scene()->camera()->apply();
+			pE->scene()->camera()->bind();
 		}
+		if( pE->scene()->enabled( SCENE_PRE_RENDER ) ) pE->scene()->pre_render();
 		pE->scene()->render();
+		if( pE->scene()->enabled( SCENE_POST_RENDER ) ) pE->scene()->post_render();
 	}
 	INPUT::reset_events();
+	glutPostRedisplay();
 }
 
 void JEngine::callback_keydown( unsigned char key, int x, int y ) {

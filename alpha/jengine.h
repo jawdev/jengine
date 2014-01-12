@@ -26,6 +26,7 @@ using namespace std;
 #include "render.h"
 #include "shader.h"
 #include "entity.h"
+#include "shape.h"
 #include "camera.h"
 #include "filter.h"
 #include "scene.h"
@@ -35,6 +36,7 @@ namespace jengine {
 ///////////////////////////////////////////////// macros
 
 #define SAFE_DELETE( obj ) { if( obj != nullptr ) { delete obj; obj = nullptr; } }
+#define SAFE_DELETE_ARR( obj ) { if( obj != nullptr ) { delete [] obj; obj = nullptr; } }
 
 ///////////////////////////////////////////////// GLOBAL
 
@@ -42,9 +44,11 @@ namespace GLOBAL {
 	// declared in jengine.cc
 
 	extern void* engine_instance;
+	extern timer stopwatch;
 
 	extern unsigned short window_width;
 	extern unsigned short window_height;
+	extern unsigned int render_distance;
 
 	extern ShaderSpec shader_spec;
 }
@@ -62,6 +66,7 @@ struct SETUP {
 		glut_ignore_key_repeat = true;
 		glut_cursor = GLUT_CURSOR_LEFT_ARROW;
 		quit_key = 0;
+		render_distance = 500;
 	}
 	int* argc;
 	char** argv;
@@ -72,6 +77,7 @@ struct SETUP {
 	bool glut_ignore_key_repeat;
 	unsigned int glut_cursor;
 	unsigned int quit_key;
+	unsigned int render_distance;
 };
 
 ///////////////////////////////////////////////// JEngine

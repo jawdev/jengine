@@ -31,6 +31,17 @@ void Filter::render() {
 	}
 }
 
+//----------------- manage
+
+void Filter::add( Entity* pE ) {
+	if( pE == nullptr ) return;
+	m_entities.push_back( pE );
+}
+
+void Filter::clear() {
+	m_entities.clear();
+}
+
 //----------------- get
 
 vector< Entity* >* Filter::entities() { return &m_entities; }

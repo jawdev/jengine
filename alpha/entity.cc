@@ -23,7 +23,7 @@ void Entity::update() {
 }
 
 void Entity::spatialize() {
-	float dtime = TIMER::delta;
+	float dtime = GLOBAL::stopwatch.delta;
 	m_position += m_velocity*dtime;
 	m_rotation += m_spin*dtime;
 	m_scale += m_morph*dtime;
@@ -55,13 +55,13 @@ Entity* Entity::spin( vec v ) { m_spin = v; return this; }
 Entity* Entity::morph( vec v ) { m_morph = v; return this; }
 
 Entity* Entity::look_at( vec v ) {
-	float dx = v.x-m_position.x;
-	float dy = v.y-m_position.y;
-	float dz = v.z-m_position.z;
-	float yang = atan2( dz, dx );
+	float dx = m_position.x-v.x;
+	float dy = m_position.y-v.y;
+	float dz = m_position.z-v.z;
+	float yang = atan2( dx, dz );
 	float hyp = sqrt( dx*dx+dz*dz );
 	m_rotation.y = yang;
-	m_rotation.z = ( hyp==0?0:atan( dy/hyp ) );
+	m_rotation.x = ( hyp==0?0:-atan( dy/hyp ) );
 	return this;
 }
 
@@ -79,17 +79,17 @@ mat Entity::transform() { return m_transform; }
 
 mat Entity::gen_transform() {
 	mat trans, rot;
-	vmath::mat_translation( m_position, &trans );
-	vmath::mat_rotation( m_rotation, &rot );
-	m_transform = rot*trans;
+	vmath::mat_translation( &trans, m_position );
+	vmath::mat_rotation( &rot, m_rotation );
+	m_transform = trans*rot;
 	return m_transform;
 }
 
 mat Entity::gen_transform_world() {
 	mat trans, rot;
-	vmath::mat_translation( -m_position, &trans );
-	vmath::mat_rotation( m_rotation, &rot );
-	m_transform = trans*rot;
+	vmath::mat_translation( &trans, -m_position );
+	vmath::mat_rotation( &rot, -m_rotation );
+	m_transform = rot*trans;
 	return m_transform;
 }
 

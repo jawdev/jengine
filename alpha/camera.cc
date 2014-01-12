@@ -31,6 +31,8 @@ vec InputMap::rotation() { return m_rotation; }
 Camera::Camera() {
 	m_pInputMap = nullptr;
 	m_pEntity = nullptr;
+	m_projType = PROJ_PERSPECTIVE;
+	reshape();
 }
 
 Camera::~Camera() {
@@ -65,15 +67,40 @@ void Camera::clear_entity() {
 
 //----------------- projection
 
-Camera* Camera::load_projection( const mat& m ) {
-	m_projection = m;
-	return this;
+void Camera::project( unsigned int t ) {
+	float aspect = (float)GLOBAL::window_width/(float)GLOBAL::window_height;
+	m_projType = t;
+	switch( t ) {
+	case PROJ_NONE:
+		m_projection.identity();
+		break;
+	case PROJ_PERSPECTIVE:
+		vmath::perspective( &m_projection, -aspect, aspect, -1, 1, 1, GLOBAL::render_distance );
+		break;
+	case PROJ_ORTHOGRAPHIC:
+		vmath::orthographic( &m_projection, -aspect, aspect, -1, 1, 1, GLOBAL::render_distance );
+		break;
+	default:
+		m_projType = -1;
+		cerr << __FILE__ << ":" << __LINE__ << ": Undefined projection value (" << t << ")" << endl;
+		break;
+	}
+	if( locked() ) finalize();
+}
+
+void Camera::reshape() {
+	project( m_projType );
+}
+
+void Camera::finalize() {
+	m_final = m_projection*transform();
 }
 
 //----------------- run
 
 void Camera::on_lock() {
 	Entity::gen_transform_world();
+	finalize();
 }
 
 void Camera::update() {
@@ -88,14 +115,27 @@ void Camera::update() {
 	} else if( m_pEntity != nullptr ) {
 		Entity::position( m_pEntity->position()+m_entityOffsetT );
 		Entity::rotation( m_pEntity->rotation()+m_entityOffsetR );
-	} else {
+	} else if( !locked() ) {
 		Entity::spatialize();
 	}
 }
 
-void Camera::apply() {
-	if( !Entity::locked() ) Entity::gen_transform_world();
-	glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_CAMERA_MAT], 1, GL_FALSE, transform().glfloat_data() );
+void Camera::bind() {
+	if( !Entity::locked() ) {
+		Entity::gen_transform_world();
+		finalize();
+	}
+	glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_CAMERA_MAT], 1, GL_FALSE, m_final.glfloat_data() );
 }
+
+//----------------- set
+
+Camera* Camera::mat_projection( mat m ) { m_projection = m; if( locked() ) finalize(); return this; }
+Camera* Camera::mat_final( mat m ) { m_final = m; return this; }
+
+//----------------- get
+
+mat Camera::mat_projection() { return m_projection; }
+mat Camera::mat_final() { return m_final; }
 
 } //jengine

@@ -26,6 +26,13 @@ private:
 
 ///////////////////////////////////////////////// Camera
 
+enum camera_proj_t : unsigned int {
+	PROJ_NONE,
+	PROJ_PERSPECTIVE,
+	PROJ_ORTHOGRAPHIC,
+	PROJ_LEN
+};
+
 class Camera : public Entity {
 public:
 	Camera();
@@ -40,16 +47,27 @@ public:
 	void clear_entity();
 
 	// projection
-	Camera* load_projection( const mat& m );
+	void project( unsigned int t = PROJ_PERSPECTIVE );
+	void reshape();
+	void finalize();
 
 	// run
 	void on_lock();
 	void update();
-	void apply();
+	void bind();
 
+	// set
+	Camera* mat_projection( mat );
+	Camera* mat_final( mat );
+
+	// get
+	mat mat_projection();
+	mat mat_final();
 private:
 	InputMap* m_pInputMap;
+	unsigned int m_projType;
 	mat m_projection;
+	mat m_final;
 	Entity* m_pEntity;
 	vec m_entityOffsetT;
 	vec m_entityOffsetR;

@@ -19,20 +19,24 @@ public:
 	~Renderbuffer();
 
 	// manage
-	void resize( unsigned int w = 0, unsigned int h = 0 );
-	void use();
+	void reshape( unsigned int w = 0, unsigned int h = 0 );
+	void bind();
 	void blit( unsigned int fid = 0 );
+
+	// set
+	Renderbuffer* clear_color( vec );
 
 	// get
 	unsigned int width();
 	unsigned int height();
+	vec clear_color();
 	GLuint gl_framebuffer();
 	GLuint gl_renderbuffer( unsigned int id );
 
 private:
 	unsigned int m_width;
 	unsigned int m_height;
-
+	vec m_clearColor;
 	GLuint m_framebuffer;
 	GLuint* m_renderbuffers;
 };

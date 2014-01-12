@@ -17,6 +17,10 @@ public:
 	virtual void update();
 	virtual void render();
 
+	// manage
+	void add( Entity* );
+	void clear();
+
 	// get
 	vector< Entity* >* entities();
 private:

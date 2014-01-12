@@ -10,6 +10,7 @@ namespace jengine {
 Renderbuffer::Renderbuffer() {
 	m_width = GLOBAL::window_width;
 	m_height = GLOBAL::window_height;
+	m_clearColor = vec();
 
 	m_renderbuffers = new GLuint[NUM_BUFFERS];
 	glGenRenderbuffers( NUM_BUFFERS, m_renderbuffers );
@@ -32,7 +33,7 @@ Renderbuffer::~Renderbuffer() {
 
 //----------------- manage
 
-void Renderbuffer::resize( unsigned int w, unsigned int h ) {
+void Renderbuffer::reshape( unsigned int w, unsigned int h ) {
 	if( w == 0 && h == 0 ) {
 		w = GLOBAL::window_width;
 		h = GLOBAL::window_height;
@@ -55,7 +56,7 @@ void Renderbuffer::resize( unsigned int w, unsigned int h ) {
 	
 }
 
-void Renderbuffer::use() {
+void Renderbuffer::bind() {
 	glBindFramebuffer( GL_DRAW_FRAMEBUFFER, m_framebuffer );
 	glClear( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
 }
@@ -65,12 +66,22 @@ void Renderbuffer::blit( unsigned int fid ) {
 	glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fid );
 	glClear( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
 	glBlitFramebuffer( 0, 0, m_width-1, m_height-1, 0, 0, m_width-1, m_height-1, GL_COLOR_BUFFER_BIT, GL_NEAREST );
+	glutSwapBuffers();
+}
+
+//----------------- set
+
+Renderbuffer* Renderbuffer::clear_color( vec v ) {
+	m_clearColor = v;
+	glClearColor( v.x, v.y, v.z, v.w );
+	return this;
 }
 
 //----------------- get
 
 unsigned int Renderbuffer::width() { return m_width; }
 unsigned int Renderbuffer::height() { return m_height; }
+vec Renderbuffer::clear_color() { return m_clearColor; }
 GLuint Renderbuffer::gl_framebuffer() { return m_framebuffer; }
 GLuint Renderbuffer::gl_renderbuffer( unsigned int id ) { return m_renderbuffers[id]; }
 
