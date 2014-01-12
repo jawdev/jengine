@@ -22,6 +22,9 @@ public:
 	virtual void on_lock();
 	virtual void on_unlock();
 
+	// object
+	void bind_model_mat();
+
 	// set
 	Entity* lock( bool = true );
 	Entity* position( vec );

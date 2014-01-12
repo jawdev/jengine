@@ -23,11 +23,7 @@ private:
 	float m_width;
 	float m_length;
 
-	GLuint m_VA;
-	GLuint m_VB;
-	GLuint m_EB;
-	GLfloat* m_vertices;
-	GLushort* m_indices;
+	Mesh* m_pMesh;
 };
 
 

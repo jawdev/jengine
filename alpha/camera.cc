@@ -38,7 +38,6 @@ void InputMap::update( Entity* pE ) {
 	if( pE == nullptr ) return;
 
 	if( pE->rotation().y != 0 ) {
-		float tempY = m_translation.y;
 		vmath::mat_rotation_y( &m_matTemp, pE->rotation().y );
 		m_translation *= m_matTemp;
 	}
@@ -75,11 +74,16 @@ Camera::Camera() {
 	m_pInputMap = nullptr;
 	m_pEntity = nullptr;
 	m_projType = PROJ_PERSPECTIVE;
+	SETUP* pS = (SETUP*)GLOBAL::setup_instance;
+	m_renderDistance = new float[2];
+	m_renderDistance[0] = pS->default_render_distance_near;
+	m_renderDistance[1] = pS->default_render_distance_far;
 	reshape();
 }
 
 Camera::~Camera() {
 	if( m_pInputMap != nullptr ) delete m_pInputMap;
+	SAFE_DELETE_ARR( m_renderDistance );
 }
 
 //----------------- input mapping
@@ -118,10 +122,10 @@ void Camera::project( unsigned int t ) {
 		m_projection.identity();
 		break;
 	case PROJ_PERSPECTIVE:
-		vmath::perspective( &m_projection, -aspect, aspect, -1, 1, 1, GLOBAL::render_distance );
+		vmath::perspective( &m_projection, -aspect, aspect, -1, 1, m_renderDistance[0], m_renderDistance[1] );
 		break;
 	case PROJ_ORTHOGRAPHIC:
-		vmath::orthographic( &m_projection, -aspect, aspect, -1, 1, 1, GLOBAL::render_distance );
+		vmath::orthographic( &m_projection, -aspect, aspect, -1, 1, m_renderDistance[0], m_renderDistance[1] );
 		break;
 	default:
 		m_projType = -1;
@@ -173,10 +177,20 @@ void Camera::bind() {
 
 Camera* Camera::mat_projection( mat m ) { m_projection = m; if( locked() ) finalize(); return this; }
 Camera* Camera::mat_final( mat m ) { m_final = m; return this; }
+Camera* Camera::render_distance( float n, float f ) {
+	m_renderDistance[0] = n;
+	m_renderDistance[1] = f;
+	return this;
+}
+Camera* Camera::render_distance_near( float n ) { m_renderDistance[0] = n; return this; }
+Camera* Camera::render_distance_far( float f ) { m_renderDistance[1] = f; return this; }
 
 //----------------- get
 
 mat Camera::mat_projection() { return m_projection; }
 mat Camera::mat_final() { return m_final; }
+float* Camera::render_distance() { return m_renderDistance; }
+float Camera::render_distance_near() { return m_renderDistance[0]; }
+float Camera::render_distance_far() { return m_renderDistance[1]; }
 
 } //jengine

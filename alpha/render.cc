@@ -10,7 +10,6 @@ namespace jengine {
 Renderbuffer::Renderbuffer() {
 	m_width = GLOBAL::window_width;
 	m_height = GLOBAL::window_height;
-	m_clearColor = vec();
 
 	m_renderbuffers = new GLuint[NUM_BUFFERS];
 	glGenRenderbuffers( NUM_BUFFERS, m_renderbuffers );
@@ -69,19 +68,10 @@ void Renderbuffer::blit( unsigned int fid ) {
 	glutSwapBuffers();
 }
 
-//----------------- set
-
-Renderbuffer* Renderbuffer::clear_color( vec v ) {
-	m_clearColor = v;
-	glClearColor( v.x, v.y, v.z, v.w );
-	return this;
-}
-
 //----------------- get
 
 unsigned int Renderbuffer::width() { return m_width; }
 unsigned int Renderbuffer::height() { return m_height; }
-vec Renderbuffer::clear_color() { return m_clearColor; }
 GLuint Renderbuffer::gl_framebuffer() { return m_framebuffer; }
 GLuint Renderbuffer::gl_renderbuffer( unsigned int id ) { return m_renderbuffers[id]; }
 

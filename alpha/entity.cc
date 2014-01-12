@@ -38,6 +38,13 @@ void Entity::render() {
 void Entity::on_lock() { transform(); }
 void Entity::on_unlock() {}
 
+//----------------- object
+
+void Entity::bind_model_mat() {
+	if( !locked() ) glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_MODEL_MAT], 1, GL_FALSE, gen_transform().glfloat_data() );
+	else glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_MODEL_MAT], 1, GL_FALSE, transform().glfloat_data() );
+}
+
 //----------------- set
 
 Entity* Entity::lock( bool b ) {

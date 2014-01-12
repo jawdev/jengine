@@ -72,10 +72,16 @@ public:
 	// set
 	Camera* mat_projection( mat );
 	Camera* mat_final( mat );
+	Camera* render_distance( float, float );
+	Camera* render_distance_near( float );
+	Camera* render_distance_far( float );
 
 	// get
 	mat mat_projection();
 	mat mat_final();
+	float* render_distance();
+	float render_distance_near();
+	float render_distance_far();
 private:
 	InputMap* m_pInputMap;
 	unsigned int m_projType;
@@ -84,6 +90,7 @@ private:
 	Entity* m_pEntity;
 	vec m_entityOffsetT;
 	vec m_entityOffsetR;
+	float* m_renderDistance;
 };
 
 

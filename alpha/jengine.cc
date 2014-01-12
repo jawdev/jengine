@@ -9,29 +9,29 @@ namespace jengine {
 ///////////////////////////////////////////////// GLOBAL
 
 void* GLOBAL::engine_instance = nullptr;
+void* GLOBAL::setup_instance = nullptr;
 timer GLOBAL::stopwatch = timer();
 unsigned short GLOBAL::window_width = 800;
 unsigned short GLOBAL::window_height = 600;
-unsigned int GLOBAL::render_distance = 1;
 ShaderSpec GLOBAL::shader_spec;
 
 ///////////////////////////////////////////////// JEngine
 
-JEngine::JEngine( const SETUP &setup ) {
+JEngine::JEngine( SETUP* setup ) {
 	pthread_getconcurrency();
 	GLOBAL::engine_instance = this;
-	GLOBAL::render_distance = setup.render_distance;
+	GLOBAL::setup_instance = setup;
 	
-	glutInit( setup.argc, setup.argv );
-	glutInitDisplayMode( setup.glut_display_mode );
+	glutInit( setup->argc, setup->argv );
+	glutInitDisplayMode( setup->glut_display_mode );
 	glutInitContextVersion( 4, 3 );
 	glutInitContextProfile( GLUT_CORE_PROFILE );
 
-	GLOBAL::window_width = setup.window_width;
-	GLOBAL::window_height = setup.window_height;
-	glutInitWindowSize( setup.window_width, setup.window_height );
-	glutInitWindowPosition( ( glutGet( GLUT_SCREEN_WIDTH )-setup.window_width )/2.0f, ( glutGet( GLUT_SCREEN_HEIGHT )-setup.window_height )/2.0f );
-	glutCreateWindow( setup.window_title.c_str() );
+	GLOBAL::window_width = setup->window_width;
+	GLOBAL::window_height = setup->window_height;
+	glutInitWindowSize( setup->window_width, setup->window_height );
+	glutInitWindowPosition( ( glutGet( GLUT_SCREEN_WIDTH )-setup->window_width )/2.0f, ( glutGet( GLUT_SCREEN_HEIGHT )-setup->window_height )/2.0f );
+	glutCreateWindow( setup->window_title.c_str() );
 
 	glewExperimental = GL_TRUE;
 	if( glewInit() ) {
@@ -43,17 +43,17 @@ JEngine::JEngine( const SETUP &setup ) {
 	glutDisplayFunc( JEngine::callback_display );
 	atexit( JEngine::callback_quit );
 	
-	glutIgnoreKeyRepeat( ( setup.glut_ignore_key_repeat )?1:0 );
+	glutIgnoreKeyRepeat( ( setup->glut_ignore_key_repeat )?1:0 );
 	glutKeyboardFunc( JEngine::callback_keydown );
 	glutKeyboardUpFunc( JEngine::callback_keyup );
 	glutSpecialFunc( JEngine::callback_specialdown );
 	glutSpecialUpFunc( JEngine::callback_specialup );
 
-	glutSetCursor( setup.glut_cursor );
+	glutSetCursor( setup->glut_cursor );
 	glutMouseFunc( JEngine::callback_mouse );
 	glutPassiveMotionFunc( JEngine::callback_mousemove );
 
-	INPUT::quit_key = setup.quit_key;
+	INPUT::quit_key = setup->quit_key;
 	INPUT::poll_mouse( true );
 
 	m_pScene = nullptr;

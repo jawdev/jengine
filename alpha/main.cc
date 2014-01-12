@@ -12,7 +12,7 @@ int main( int argc, char* argv[] ) {
 	setup.argv = argv;
 	setup.window_title = "Test Game | JEngine";
 	setup.quit_key = 27;
-	JEngine je( setup );
+	JEngine je( &setup );
  
 	je.load_scene( new CustomScene );
 	je.start();

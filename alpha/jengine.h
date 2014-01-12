@@ -25,6 +25,7 @@ using namespace std;
 #include "user_interface.h"
 #include "render.h"
 #include "shader.h"
+#include "mesh.h"
 #include "entity.h"
 #include "shape.h"
 #include "camera.h"
@@ -44,11 +45,11 @@ namespace GLOBAL {
 	// declared in jengine.cc
 
 	extern void* engine_instance;
+	extern void* setup_instance;
 	extern timer stopwatch;
 
 	extern unsigned short window_width;
 	extern unsigned short window_height;
-	extern unsigned int render_distance;
 
 	extern ShaderSpec shader_spec;
 }
@@ -59,32 +60,34 @@ struct SETUP {
 	SETUP() {
 		argc = nullptr;
 		argv = nullptr;
-		window_width = 800;
-		window_height = 600;
-		window_title = "JEngine";
 		glut_display_mode = GLUT_RGBA;
 		glut_ignore_key_repeat = true;
 		glut_cursor = GLUT_CURSOR_NONE;
+		window_title = "JEngine";
+		window_width = 800;
+		window_height = 600;
+		default_render_distance_near = 1;
+		default_render_distance_far = 100;
 		quit_key = 0;
-		render_distance = 500;
 	}
 	int* argc;
 	char** argv;
-	unsigned short window_width;
-	unsigned short window_height;
 	string window_title;
 	unsigned int glut_display_mode;
 	bool glut_ignore_key_repeat;
 	unsigned int glut_cursor;
+	unsigned short window_width;
+	unsigned short window_height;
+	float default_render_distance_near;
+	float default_render_distance_far;
 	unsigned int quit_key;
-	unsigned int render_distance;
 };
 
 ///////////////////////////////////////////////// JEngine
 
 class JEngine {
 public:
-	JEngine( const SETUP &c );
+	JEngine( SETUP* setup );
 	~JEngine();
 	void stop();
 	void start();
