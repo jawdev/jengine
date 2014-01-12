@@ -64,7 +64,7 @@ struct SETUP {
 		window_title = "JEngine";
 		glut_display_mode = GLUT_RGBA;
 		glut_ignore_key_repeat = true;
-		glut_cursor = GLUT_CURSOR_LEFT_ARROW;
+		glut_cursor = GLUT_CURSOR_NONE;
 		quit_key = 0;
 		render_distance = 500;
 	}

@@ -8,7 +8,8 @@ namespace jengine {
 ///////////////////////////////////////////////// InputMap
 
 InputMap::InputMap() {
-
+	m_tmult = m_rmult = 1.0f;
+	m_useDelta = true;
 }
 
 InputMap::~InputMap() {
@@ -17,9 +18,51 @@ InputMap::~InputMap() {
 
 //----------------- run
 
-void InputMap::update() {
+void InputMap::update( Entity* pE ) {
+	m_translation.x = m_tmult.x*( ( INPUT::key['a']?-1:0 )+( INPUT::key['d']?1:0 ) );
+	m_translation.y = m_tmult.y*( ( INPUT::special[112]?1:0 )+( INPUT::special[114]?-1:0 ) );
+	m_translation.z = m_tmult.z*( ( INPUT::key['w']?-1:0 )+( INPUT::key['s']?1:0 ) );
 
+	//float dy = INPUT::mouse_y-INPUT::last_mouse_y;
+	if( INPUT::mouse_moved ) {
+		m_rotation.y = -1.0f*m_rmult.y*INPUT::mouse_dx;
+		m_rotation.x = -1.0f*m_rmult.x*INPUT::mouse_dy;
+		INPUT::poll_mouse();
+	}
+
+	if( m_useDelta ) {
+		m_translation *= GLOBAL::stopwatch.delta;
+		m_rotation *= GLOBAL::stopwatch.delta;
+	}
+
+	if( pE == nullptr ) return;
+
+	if( pE->rotation().y != 0 ) {
+		float tempY = m_translation.y;
+		vmath::mat_rotation_y( &m_matTemp, pE->rotation().y );
+		m_translation *= m_matTemp;
+	}
+	pE->rotation( pE->rotation()+m_rotation );
+	pE->position( pE->position()+m_translation );
 }
+
+//----------------- set
+
+InputMap* InputMap::multiply_transform( vec t, vec r ) {
+	multiply_translation( t );
+	multiply_rotation( r );
+	return this;
+}
+InputMap* InputMap::multiply_transform( float t, float r ) {
+	multiply_translation( t );
+	multiply_rotation( r );
+	return this;
+}
+InputMap* InputMap::multiply_translation( vec t ) { m_tmult = t; return this; }
+InputMap* InputMap::multiply_translation( float t ) { m_tmult = vec( t, t, t ); return this; }
+InputMap* InputMap::multiply_rotation( vec r ) { m_rmult = r; return this; }
+InputMap* InputMap::multiply_rotation( float r ) { m_rmult = vec( r, r ); return this; }
+InputMap* InputMap::enable_delta( bool b ) { m_useDelta = b; return this; }
 
 //----------------- get
 
@@ -105,9 +148,7 @@ void Camera::on_lock() {
 
 void Camera::update() {
 	if( m_pInputMap != nullptr ) {
-		m_pInputMap->update();
-		Entity::position( m_pInputMap->translation() );
-		Entity::rotation( m_pInputMap->rotation() );
+		m_pInputMap->update( this );
 		if( m_pEntity != nullptr ) {
 			m_pEntity->position( Entity::position()-m_entityOffsetT );
 			m_pEntity->rotation( Entity::rotation()-m_entityOffsetR );

@@ -14,14 +14,27 @@ public:
 	virtual ~InputMap();
 
 	// run
-	virtual void update();
+	virtual void update( Entity* pE = nullptr );
+
+	// set
+	InputMap* multiply_transform( vec, vec );
+	InputMap* multiply_transform( float, float );
+	InputMap* multiply_translation( vec );
+	InputMap* multiply_translation( float );
+	InputMap* multiply_rotation( vec );
+	InputMap* multiply_rotation( float );
+	InputMap* enable_delta( bool=true );
 
 	// get
 	vec translation();
 	vec rotation();
 private:
+	vec m_tmult;
+	vec m_rmult;
+	bool m_useDelta;
 	vec m_translation;
 	vec m_rotation;
+	mat m_matTemp;
 };
 
 ///////////////////////////////////////////////// Camera

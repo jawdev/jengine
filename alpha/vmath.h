@@ -334,7 +334,8 @@ struct vmath {
 
 	static inline vec norm( const vec& a ) {
 		float mag = sqrt( a.x*a.x+a.y*a.y+a.z*a.z );
-		return vec( a.x/mag, a.y/mag, a.z/mag, 1 );
+		if( mag == 0 ) return vec( 0, 0, 0, 1 );
+		else return vec( a.x/mag, a.y/mag, a.z/mag, 1 );
 	}
 
 	static inline vec cross( vec a, vec b ) {

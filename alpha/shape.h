@@ -25,7 +25,9 @@ private:
 
 	GLuint m_VA;
 	GLuint m_VB;
+	GLuint m_EB;
 	GLfloat* m_vertices;
+	GLushort* m_indices;
 };
 
 

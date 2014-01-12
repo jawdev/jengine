@@ -29,8 +29,13 @@ struct INPUT {
 	static short mouse_y;
 	static short last_mouse_x;
 	static short last_mouse_y;
+	static short mouse_dx;
+	static short mouse_dy;
+	static bool mouse_moved;
+	static bool warping;
 
 	static void move_mouse( short x, short y );
+	static void poll_mouse( bool=false );
 	static void reset_events();
 
 	static unsigned int quit_key;

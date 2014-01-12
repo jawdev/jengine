@@ -54,6 +54,7 @@ JEngine::JEngine( const SETUP &setup ) {
 	glutPassiveMotionFunc( JEngine::callback_mousemove );
 
 	INPUT::quit_key = setup.quit_key;
+	INPUT::poll_mouse( true );
 
 	m_pScene = nullptr;
 }

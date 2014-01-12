@@ -21,10 +21,10 @@ void CustomScene::load() {
 	m_pShaderProgram->spec( *( new ShaderSpecRef ) );
 	m_pShaderProgram->use();
 
-	//Scene::camera()->project( PROJ_NONE );
+	InputMap* pIM = new InputMap();
+	pIM->multiply_transform( 2, 20 );
+	Scene::camera()->map_input( pIM );
 	Scene::camera()->position( vec( 2, 1, 2 ) );
-	Scene::camera()->velocity( vec( -0.4f ) );
-	
 
 	Filter* pF = new Filter();
 	FloorPlane* pFloor = new FloorPlane( 1, 1 );
