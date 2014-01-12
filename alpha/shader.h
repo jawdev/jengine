@@ -29,6 +29,7 @@ private:
 enum shader_uloc_t : unsigned int {
 	ULOC_CAMERA_MAT,
 	ULOC_MODEL_MAT,
+	ULOC_BASE_COLOR,
 	ULOC_LEN
 };
 
@@ -55,6 +56,7 @@ struct ShaderSpecRef {
 	ShaderSpecRef() {
 		uniform_names[ULOC_CAMERA_MAT] = "m4_camera";
 		uniform_names[ULOC_MODEL_MAT] = "m4_model";
+		uniform_names[ULOC_BASE_COLOR] = "v4_color";
 	}
 	string uniform_names[ULOC_LEN];
 };

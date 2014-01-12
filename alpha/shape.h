@@ -10,7 +10,7 @@ namespace jengine {
 
 class FloorPlane : public Entity {
 public:
-	FloorPlane( float w, float l );
+	FloorPlane( float w, float l, vec col = vec( 1, 1, 1, 1 ) );
 	~FloorPlane();
 
 	// run
@@ -22,7 +22,31 @@ public:
 private:
 	float m_width;
 	float m_length;
+	Mesh* m_pMesh;
+};
 
+///////////////////////////////////////////////// Box
+
+class Box : public Entity {
+public:
+	Box( float s=1.0f, vec col = vec( 1, 1, 1, 1 ) );
+	Box( float w, float l, float h, vec col = vec( 1, 1, 1, 1 ) );
+	~Box();
+
+	// run
+	void render();
+
+	// get
+	float size();
+	float width();
+	float length();
+	float height();
+private:
+	void create_mesh( vec col );
+
+	float m_width;
+	float m_length;
+	float m_height;
 	Mesh* m_pMesh;
 };
 

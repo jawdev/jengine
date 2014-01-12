@@ -12,8 +12,7 @@ CustomScene::CustomScene() : Scene( "custom" ) {
 }
 
 void CustomScene::load() {
-	chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
-
+	timer* pTimer = new timer();
 
 	m_pShaderProgram = new ShaderProgram();
 	m_pShaderProgram->add_shader( GL_VERTEX_SHADER, "resources/shaders/default.vs" );
@@ -25,17 +24,23 @@ void CustomScene::load() {
 	InputMap* pIM = new InputMap();
 	pIM->multiply_transform( 2, 20 );
 	Scene::camera()->map_input( pIM );
-	Scene::camera()->position( vec( 0, 1, 5 ) );
+	Scene::camera()->position( vec( 1, 1, 4 ) );
+	Scene::camera()->look_at( vec() );
+
+	Box* pObj1 = new Box( 1, vec( 0, 0, 1 ) );
+	pObj1->spin( vec( 0, 1 ) );
 
 	Filter* pF = new Filter();
-	FloorPlane* pFloor = new FloorPlane( 1, 1 );
-	pF->add( pFloor );
+	pF->add( pObj1 );
 	Scene::push_filter( pF );
 
+	// OpenGL settings
+	glEnable( GL_CULL_FACE );
 
-	chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
-	float diff = float( chrono::duration_cast< chrono::duration< float > >( t2-t1 ).count() );
-	cout << "time: " << setprecision( 16 ) <<  setiosflags( ios::fixed|ios::showpoint ) << diff << endl;
+	cout << "-----------------------" << endl;
+	cout << "|  time: " << pTimer->calculate_delta() << "  |" << endl;
+	cout << "-----------------------" << endl;
+	delete pTimer;
 }
 
 void CustomScene::unload() {

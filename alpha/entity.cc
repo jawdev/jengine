@@ -41,6 +41,7 @@ void Entity::on_unlock() {}
 //----------------- object
 
 void Entity::bind_model_mat() {
+	if( GLOBAL::shader_spec[ULOC_MODEL_MAT] < 0 ) return;
 	if( !locked() ) glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_MODEL_MAT], 1, GL_FALSE, gen_transform().glfloat_data() );
 	else glUniformMatrix4fv( GLOBAL::shader_spec[ULOC_MODEL_MAT], 1, GL_FALSE, transform().glfloat_data() );
 }

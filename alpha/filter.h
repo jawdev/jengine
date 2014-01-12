@@ -18,7 +18,7 @@ public:
 	virtual void render();
 
 	// manage
-	void add( Entity* );
+	Filter* add( Entity* );
 	void clear();
 
 	// get

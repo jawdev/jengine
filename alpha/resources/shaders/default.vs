@@ -2,18 +2,13 @@
 
 uniform mat4 m4_camera;
 uniform mat4 m4_model;
+uniform vec4 v4_color = vec4( 1, 1, 1, 1 );
 
 layout (location=0) in vec4 position;
-//layout (location=1) in vec4 color;
 
 out vec4 vs_fs_color;
 
-mat4 M = mat4(	1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 1, 1 );
-
 void main( void ) {
-	vs_fs_color = vec4( 1, 0, 0, 1 );
+	vs_fs_color = v4_color;
 	gl_Position = m4_camera*m4_model*position;
 }

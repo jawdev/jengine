@@ -33,9 +33,10 @@ void Filter::render() {
 
 //----------------- manage
 
-void Filter::add( Entity* pE ) {
-	if( pE == nullptr ) return;
+Filter* Filter::add( Entity* pE ) {
+	if( pE == nullptr ) return this;
 	m_entities.push_back( pE );
+	return this;
 }
 
 void Filter::clear() {

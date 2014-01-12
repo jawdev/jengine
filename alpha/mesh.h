@@ -16,9 +16,11 @@ struct MESH_SETUP {
 		draw = MESH_DRAW_ARRAY;
 		shape = MESH_SHAPE_TRIANGLES;
 		primitive_restart_index = 0;
+		color = vec( 1, 1, 1, 1 );
 	}
 	mesh_draw_t draw;
 	mesh_shape_t shape;
+	vec color;
 	unsigned int primitive_restart_index;
 };
 

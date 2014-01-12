@@ -121,14 +121,6 @@ void Mesh::build() {
 	default:
 		cerr << __FILE__ << ":" << __LINE__ << ": Unknown Mesh drawing type (" << m_pSetup->draw << ")." << endl;
 	}
-
-	switch( m_pSetup->shape ) {
-	case MESH_SHAPE_LINE_STRIP:
-	case MESH_SHAPE_TRIANGLE_STRIP:
-		if( m_pSetup->primitive_restart_index > 0 ) glPrimitiveRestartIndex( m_pSetup->primitive_restart_index );
-	default:
-		break;
-	}
 	
 	glVertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 	glEnableVertexAttribArray( 0 );
@@ -140,6 +132,24 @@ void Mesh::render() {
 		cerr << __FILE__ << ":" << __LINE__ << ": Cannot render Mesh (" << this << ") before building." << endl;
 		return;
 	}
+
+	if( GLOBAL::shader_spec[ULOC_BASE_COLOR] >= 0 ) {
+		glUniform4fv( GLOBAL::shader_spec[ULOC_BASE_COLOR], 1, m_pSetup->color.glfloat_data() );
+	}
+
+	switch( m_pSetup->shape ) {
+	case MESH_SHAPE_LINE_STRIP:
+	case MESH_SHAPE_TRIANGLE_STRIP:
+		if( m_pSetup->primitive_restart_index > 0 ) {
+			glEnable( GL_PRIMITIVE_RESTART );
+			glPrimitiveRestartIndex( m_pSetup->primitive_restart_index );
+		} else {
+			glDisable( GL_PRIMITIVE_RESTART );
+		}
+	default:
+		break;
+	}
+
 	if( m_pSetup->draw == MESH_DRAW_ELEMENT ) {
 		glDrawElements( MESH_SHAPE_MAP[m_pSetup->shape], m_countI, GL_UNSIGNED_SHORT, NULL );
 	} else {
